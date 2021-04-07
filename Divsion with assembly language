@@ -1,9 +1,206 @@
+SECTION INTVEC
+B main
 
+SECTION CODE
 
-Hey ! This is a little script in Assembly language that I have made how make a division whit 2 decimal.
+main
+; Le simulateur n'autorise pas les valeur au a aditioner au dessus de 256
+;Donc il faut aller dans les variable et modifier les variable numérateur et dénominateur
+;LDR R0,zero
+;LDR R1,zero
+;ADD R0,R0, #256 ;numérateur
+;ADD R1,R1, #30 ;denominateur
+;STR R0,numerateur
+;STR R1,denominateur
+B div1
 
-If you want to give a try just pul it on the simulator below.
+div1
+;Initialise les registre a partire des variable 
+;R12 est une valeur que j'utilise comme valeur tampon a certains moment de mon programe
+;Je la reinisialise toujours a zero.
+;Le compteur 1 est expliquer a la ligne #34
+;Le compteur 2 est expliquer a la ligne #34
+LDR R1, numerateur
+LDR R2, denominateur
+LDR R3, compteur1
+LDR R4, f
+LDR R7, compteur2
+LDR R12, zero 
+B div2
 
-http://gif1001-sim.gel.ulaval.ca/?sim=nouveau#tabsmain-simulation
+;Premier partie de la division je soustrait au numerateur le dénominateur.
+;A chaque itération de la boucle j'incremente de 1 un compteur.
+;Cela me permet de savoir combien de fois est contenue le denominateur dans le numerateur
+;Il passe a div3 si le numerateur est plus grand que le dénominateur. 
+;Il passe a div6 si le numerateur est égale a 0.
+div2
+LDR R12, zero
+SUB R1,R1,R2
+ADD R3,R3,#1
+CMP R1,R12
+BEQ div6
+CMP R1,R2
+BCC div3
+B div2
 
-I warn you I have made comment in french 😛
+; Cette partie renvoie a l'étiquette qui corespond au numeros de compteur2
+; Le numeros du conpteur permet de savoir ou vas situer le chiffre dans le nombre
+; Exemple 3,56  3 premier 5 second 6 troisième
+div3
+LDR R12, zero
+LDR R12, b
+CMP R7,R12 
+BEQ divpremier 
+LDR R12, c
+CMP R7,R12 
+BEQ divseconde
+LDR R12, d
+CMP R7,R12
+BEQ divtrois
+
+;On prend le premier chiffre (donc la partie entière) et on la multiplie par 100
+;pour qu'elle soit décaler de deux chiffre sur la gauche.
+;On stoque la valeur dans la variable premier et on remet le compteur 1 a zero
+divpremier
+LDR R12, zero
+MUL R3,R3,R4
+MUL R3,R3,R4
+STR R3,premier 
+LDR R3,zero
+ADD R7,R7,#1
+B div4
+
+;On prend le deuxième chiffre (donc la premier decimal) et on la multiplie par 10
+;pour qu'elle soit décaler de un chiffre sur la gauche.
+;On stoque la valeur dans la variable second et on remet le compteur 1 a zero
+divseconde
+LDR R12, zero
+ADD R12, R12, #1
+CMP R12, R6
+BEQ divsecond1
+MUL R3,R3,R4
+STR R3,second 
+LDR R3,zero
+ADD R7,R7,#1
+B div4
+
+;On prend le troisième chiffre (donc la deusième decimal)
+;On stoque la valeur dans la variable troisieme et on remet le compteur 1 a zero
+divtrois
+LDR R12, zero
+ADD R12, R12, #2
+CMP R12, R6
+BEQ divtrois1
+LDR R12, zero
+CMP R1,R12
+BEQ div6
+STR R3,troisieme
+LDR R3,zero
+ADD R7,R7,#1
+B findiv
+
+;Cette partie sert a multiplier le reste jusqua ce qu'il soit supérieur au dénominateur
+div4
+LDR R12, zero
+CMP R1,R12
+BEQ div6
+MUL R1,R1,R4
+LDR R12, f
+CMP R1,R12
+LDREQ R6, b
+CMP R1,R2
+BGE div2
+MUL R12, R12,R12
+;LDR R5, c
+CMP R1, R12
+LDREQ R6, c
+LDR R5, zero
+CMP R1,R2
+BGE div2
+B div4
+
+;Gère lorsque le reste est a zero
+div6
+LDR R12, zero
+LDR R12, b
+CMP R7,R12
+BEQ divpremier0 
+LDR R12, c
+CMP R7,R12 
+BEQ divseconde0
+
+;Gère lorsque le reste du de la premier div est a 0
+divpremier0
+LDR R12, zero
+MUL R3,R3,R4
+MUL R3,R3,R4
+STR R3,premier 
+LDR R3,zero
+ADD R7,R7,#1
+B findiv
+
+;Gère lorsque le reste du de la deuxième div est a 0
+divseconde0
+LDR R12, zero
+MUL R3,R3,R4
+STR R3,second 
+LDR R3,zero
+ADD R7,R7,#1
+B findiv
+
+;Gère le fait que l'un des dénominateur est égale a 0
+div7
+LDR R12, zero
+LDR R12, c
+CMP R7,R12
+BEQ divsecond1
+LDR R12, d
+CMP R7,R12
+BEQ divtrois1
+
+;Gère le fait que la seconde decimal est as 0
+divsecond1
+LDR R12,zero
+STR R12, second
+STR R3, troisieme
+LDR R12,zero
+B findiv
+
+;Gère le fait que la troisième decimal est as 0
+divtrois1
+LDR R12, zero
+STR R12, troisieme
+B findiv
+
+; Additione tous les élement pour créer le nombre et le stoquer dans la variable resultat
+findiv
+LDR R12, zero
+LDR R1, premier
+LDR R2, second
+LDR R3, troisieme
+ADD R8, R1, R2
+ADD R8, R8, R3
+STR R8, resultat
+B fin
+
+;Boucle de fin.
+fin
+B fin
+
+SECTION DATA
+;division
+numerateur ASSIGN32 310
+denominateur ASSIGN32 30
+cas ASSIGN32 0
+compteur1 ASSIGN32 0
+compteur2 ASSIGN32 1
+b ASSIGN32 1 
+c ASSIGN32 2
+d ASSIGN32 3
+e ASSIGN32 4
+f ASSIGN32 10
+zero ASSIGN32 0
+premier ASSIGN32 0
+second ASSIGN32 0
+troisieme ASSIGN32 0
+resultat ASSIGN32 0 
