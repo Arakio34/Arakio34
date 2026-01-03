@@ -46,7 +46,7 @@ Mon approche du code est pragmatique et scientifique : j'aime comprendre ce qu'i
 
 Je suis toujours ouvert pour discuter de recherche, de physique, d'optimisation ou d'architecture système !
 
-* 📧 **Email :** tom.tueleau [at] imt-atlantique [dot] net
+* 📧 **Email :** tom.tueleau@imt-atlantique.net
 
 ---
 <div align="center">
