@@ -12,7 +12,7 @@ Actuellement, je suis en alternance et je travaille sur le traitement du signal 
 
 * **Formation :** Majeure en Observation et Traitement de l'Environnement (IMT Atlantique).
 * **Apprentissage :** Traitement du signal et acoustique.
-* **Objectif :** Je recherche un **Doctorat (PhD)** pour septembre/octobre 2026, idéalement sur des sujets mêlant **Deep Learning, Optimisation et Physique** (ex: méthodes Plug-and-Play, Imagerie Hyperspectrale, Problèmes Inverses).
+* **Objectif :** Je recherche un **Doctorat (PhD)** pour septembre/octobre 2026, idéalement sur des sujets mêlant **Mathematique, Optimisation et Physique** (ex: méthodes Plug-and-Play, Imagerie Hyperspectrale, Problèmes Inverses).
 
 ---
 
